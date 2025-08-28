@@ -43,7 +43,7 @@ export function EnrollmentScreen({ course, onBack }: EnrollmentScreenProps) {
     title: course.title || 'Luxury Yacht Service Excellence',
     instructor: 'Captain Marina Blackwell',
     duration: '6 hours 30 minutes',
-    modules: 8,
+    moduleCount: 8,
     students: 1247,
     rating: 4.9,
     reviews: 324,
