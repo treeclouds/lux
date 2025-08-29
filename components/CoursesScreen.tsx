@@ -88,47 +88,133 @@ export function CoursesScreen({ onNavigate }: CoursesScreenProps) {
   });
 
   return (
-    <div className="flex-1 bg-background pb-20">
+    <div className="flex-1 bg-background pb-20 lg:pb-0">
       {/* Header */}
-      <div className="bg-navy text-pearl px-4 pt-12 pb-6">
-        <h1 className="text-2xl font-light mb-4">Courses</h1>
-        
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-pearl/60" />
-          <Input
-            placeholder="Search courses..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-pearl/10 border-pearl/20 text-pearl placeholder:text-pearl/60"
-          />
-        </div>
+      <div className="bg-navy text-pearl px-4 lg:px-8 pt-12 lg:pt-8 pb-6">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-2xl lg:text-3xl font-light mb-4 lg:mb-6">Courses</h1>
+          
+          {/* Search and Filters */}
+          <div className="lg:flex lg:items-center lg:justify-between lg:gap-6">
+            {/* Search */}
+            <div className="relative mb-4 lg:mb-0 lg:flex-1 lg:max-w-md">
+              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-pearl/60" />
+              <Input
+                placeholder="Search courses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-pearl/10 border-pearl/20 text-pearl placeholder:text-pearl/60"
+              />
+            </div>
 
-        {/* Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={selectedCategory === category ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setSelectedCategory(category)}
-              className={`whitespace-nowrap ${
-                selectedCategory === category 
-                  ? 'bg-gold text-navy' 
-                  : 'text-pearl border-pearl/20 hover:bg-pearl/10'
-              }`}
-            >
-              {category}
-            </Button>
-          ))}
+            {/* Categories */}
+            <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0 lg:flex-wrap">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "secondary" : "ghost"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category)}
+                  className={`whitespace-nowrap ${
+                    selectedCategory === category 
+                      ? 'bg-gold text-navy' 
+                      : 'text-pearl border-pearl/20 hover:bg-pearl/10'
+                  }`}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="px-4 py-6">
-        <div className="space-y-4">
-          {filteredCourses.map((course) => (
+      <div className="px-4 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Desktop: Grid layout, Mobile: List layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+            {filteredCourses.map((course) => (
             <Card key={course.id} className="overflow-hidden">
-              <div className="flex">
+              {/* Desktop: Vertical card layout */}
+              <div className="hidden lg:block">
+                <div className="aspect-video relative">
+                  <ImageWithFallback
+                    src={course.image}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2 left-2 flex gap-2">
+                    <Badge variant="outline" className="text-xs bg-white/90">
+                      {course.level}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {course.category}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-medium text-sm leading-tight mb-2">
+                    {course.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs mb-3">
+                    by {course.instructor}
+                  </p>
+                  
+                  {/* Course Stats */}
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
+                    <div className="flex items-center gap-1">
+                      <Clock size={12} />
+                      {course.duration}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users size={12} />
+                      {course.enrolled}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star size={12} className="fill-current text-gold" />
+                      {course.rating}
+                    </div>
+                  </div>
+
+                  {/* Progress or Enroll */}
+                  {course.isEnrolled ? (
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-muted-foreground">
+                          {course.progress}% complete
+                        </span>
+                      </div>
+                      <Progress value={course.progress} className="h-2 mb-3" />
+                      <Button 
+                        size="sm" 
+                        className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                        onClick={() => onNavigate?.('video', {
+                          id: `course-${course.id}`,
+                          title: course.title,
+                          course: course.title,
+                          duration: '12 min',
+                          progress: course.progress
+                        })}
+                      >
+                        <Play size={14} className="mr-2" />
+                        Continue
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button 
+                      size="sm"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => onNavigate?.('enrollment', course)}
+                    >
+                      Enroll Now
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile: Horizontal card layout */}
+              <div className="flex lg:hidden">
                 {/* Course Image */}
                 <div className="w-24 h-24 flex-shrink-0">
                   <ImageWithFallback
@@ -206,6 +292,7 @@ export function CoursesScreen({ onNavigate }: CoursesScreenProps) {
               </div>
             </Card>
           ))}
+          </div>
         </div>
 
         {filteredCourses.length === 0 && (

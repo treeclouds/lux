@@ -22,7 +22,7 @@ import { MyNetwork } from './components/MyNetwork';
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentScreen, setCurrentScreen] = useState('main');
-  const [screenData, setScreenData] = useState(null);
+  const [screenData, setScreenData] = useState<any>(null);
 
   // Prevent scrolling on the body when the app is active
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function App() {
     };
   }, []);
 
-  const navigateToScreen = (screen, data = null) => {
+  const navigateToScreen = (screen: string, data: any = null) => {
     // Handle navigation to main tabs
     if (['dashboard', 'courses', 'luxpedia', 'community', 'profile'].includes(screen)) {
       setActiveTab(screen);
@@ -113,15 +113,26 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <div className="h-screen flex bg-background overflow-hidden">
+      {/* Desktop Sidebar Navigation */}
+      {currentScreen === 'main' && (
+        <div className="hidden lg:flex">
+          <MobileNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+      )}
+
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto">
-        {renderActiveScreen()}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
+          {renderActiveScreen()}
+        </div>
       </div>
 
-      {/* Bottom Navigation - Hide for deeper screens */}
+      {/* Mobile Bottom Navigation */}
       {currentScreen === 'main' && (
-        <MobileNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <div className="lg:hidden">
+          <MobileNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
       )}
     </div>
   );

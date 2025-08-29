@@ -242,9 +242,49 @@ html {
   }
 }
 
+/* Desktop responsive utilities */
+@media (min-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Large desktop utilities */
+@media (min-width: 1440px) {
+  html {
+    font-size: 18px;
+  }
+}
+
 /* Touch-friendly button sizing */
 button, 
 [role="button"] {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* Desktop button sizing adjustments */
+@media (min-width: 1024px) {
+  button, 
+  [role="button"] {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+
+/* Desktop content width utilities */
+.desktop-container {
+  @apply max-w-7xl mx-auto;
+}
+
+.desktop-sidebar-layout {
+  @apply lg:grid lg:grid-cols-4 lg:gap-8;
+}
+
+.desktop-main-content {
+  @apply lg:col-span-3;
+}
+
+.desktop-sidebar-content {
+  @apply lg:col-span-1;
 }
